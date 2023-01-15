@@ -18,10 +18,21 @@ model = pickle.load(pickle_in)
 def welcome():
     return "Welcome All"
 
+@app.route('/predict')  # API...get method
+def predict_note_authentication():
+    variance = request.args.get('variance')
+    skewness = request.args.get('skewness')
+    curtosis = request.args.get('curtosis')
+    entropy = request.args.get('entropy')
+    prediction = model.predict([[variance, skewness, curtosis, entropy]])
+    return f"The predicted value is {prediction}"
 
 
-
-
+@app.route('/predict_file', methods=["POST"])  # API...post method
+def predict_note_file():
+    df_test = pd.read_csv(request.files.get("file"))
+    prediction = list(model.predict(df_test))
+    return f"The predicted values for the csv is {prediction}"
 
 
 
